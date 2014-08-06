@@ -30,7 +30,13 @@ public class HTMLFetcher {
 	 */
 	public static HTMLDocument fetch(final URL url) throws IOException {
 		final URLConnection conn = url.openConnection();
+		conn.setConnectTimeout(5000);
+		
 		final String ct = conn.getContentType();
+		if (conn.getContentLength() > 4194304) {
+			System.err.println("Content larger than 4MB, ignored.");
+			throw new IOException();
+		}
 
 		Charset cs = Charset.forName("Cp1252");
 		if (ct != null) {
